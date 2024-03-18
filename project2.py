@@ -23,7 +23,7 @@ DIMENSIONS = 2
 D = 15
 K = 1.2
 R = K * D
-D_PRIME = 15
+D_PRIME = 20
 R_PRIME = K * D_PRIME
 DELTA_T = 0.009
 RANDOM_SEED = 28
@@ -56,7 +56,7 @@ def main():
 
     # plotNodesAndObstaclesAndSave(nodePositions, "caseOne/caseOne_start.png", obstacleRadii, obstacleCenters)
 
-    # for i in range(0, 600):
+    # for i in range(0, 700):
     #     nodePositions, nodeVelocities, nodeAccelerations = updateAlgo3(nodePositions, nodeVelocities, (250, 25), (0, 0), obstacleCenters, obstacleRadii)
     #     if (i + 1) % 100 == 0:
     #         plotNodesAndObstaclesAndSave(nodePositions, "caseOne/caseOne" + str(i + 1) + ".png", obstacleRadii, obstacleCenters)
@@ -65,9 +65,9 @@ def main():
     #     allNodeVelocities = np.concatenate((allNodeVelocities, nodeVelocities.copy()[:, :, np.newaxis]), axis = 2)
 
     # plotNodesAndObstaclesAndSave(nodePositions, "caseOne/caseOne_end.png", obstacleRadii, obstacleCenters)
-    # plotAndSaveNodeTrajectories(allPositions, "caseOne/caseOne_trajectory.png", "Fragmentation")
-    # plotAndSaveNodeVelocities(allNodeVelocities, "caseOne/caseOne_individual_velocity.png", "caseOne/caseOne_all_velcoity.png", "Fragmentation")
-    # plotAndSaveConnectivity(allPositions, "caseOne/caseOne_connectivity.png", "Fragmentation")
+    # plotAndSaveNodeTrajectories(allPositions, "caseOne/caseOne_trajectory.png", "Case One")
+    # plotAndSaveNodeVelocities(allNodeVelocities, "caseOne/caseOne_individual_velocity.png", "caseOne/caseOne_all_velcoity.png", "Case One")
+    # plotAndSaveConnectivity(allPositions, "caseOne/caseOne_connectivity.png", "Case One")
 
     ################################################################
     # CASE 2 - SIN WAVE
@@ -82,10 +82,13 @@ def main():
     obstacleRadii = np.array((15, 25, 30))
     allXCenters = []
     allYCenters = []
-    gammaX = np.arange(40, 250, ((250 - 40) / 600))
-    gammaY = (np.sin(2 * np.pi * gammaX / 600) * 75) + 25
+    gammaX = np.linspace(0, 210, 700)
+    gammaY = np.sin((gammaX / 210) * (2 * np.pi))
+    gammaY *= 50
+    gammaX += 40
+    gammaY += 25
 
-    for i in range(0, 600):
+    for i in range(0, 700):
         if i == 0:
             nodePositions, nodeVelocities, nodeAccelerations = updateAlgo3(nodePositions, nodeVelocities, (gammaX[i], gammaY[i]), (0, 0), obstacleCenters, obstacleRadii)
         else:
@@ -119,10 +122,10 @@ def main():
             plt.savefig("caseTwo/caseTwo" + str(i + 1) + ".png")
         print("FINISHED ITERATION: ", i)
 
-    plotAndSaveNodeTrajectories(allPositions, "caseTwo/caseTwo_trajectory.png", "Sin Wave")
-    plotAndSaveNodeVelocities(allNodeVelocities, "caseTwo/caseTWo_individual_velocity.png", "caseTwo/caseTwo_all_velcoity.png", "Sin Wave")
-    # plotAndSaveConnectivity(allPositions, "caseTwo/caseTwo_connectivity.png", "Sin Wave")
-    plotCenterOfMassAndTarget(gammaX, gammaY, allPositions, "caseTwo/center_of_mass.png", "Sin Wave")
+    plotAndSaveNodeTrajectories(allPositions, "caseTwo/caseTwo_trajectory.png", "Case Two")
+    plotAndSaveNodeVelocities(allNodeVelocities, "caseTwo/caseTWo_individual_velocity.png", "caseTwo/caseTwo_all_velcoity.png", "Case Two")
+    plotAndSaveConnectivity(allPositions, "caseTwo/caseTwo_connectivity.png", "Case Two")
+    plotCenterOfMassAndTarget(gammaX, gammaY, allPositions, "caseTwo/center_of_mass.png", "Case Two")
 
 
 def updateAlgo3(nodePositions, nodeVelocities, gammaPos, gammaVelocity, obstacleCenters, obstacleRadii):
@@ -432,6 +435,12 @@ def plotNodesAndSave(nodePositions, fileName):
 def plotNodesAndObstaclesAndSave(nodePositions, fileName, obstacleRadii, obstaclePositions):
 
     plt.clf()
+
+    ax = plt.gcf().gca()
+    for i in range(0, len(obstacleRadii)):
+        thisCircle = plt.Circle((obstaclePositions[i][0], obstaclePositions[i][1]), obstacleRadii[i], color = 'black')
+        ax.add_patch(thisCircle)
+
     for i in range(0, NUM_NODES):
         for j in range(0, NUM_NODES):
 
@@ -444,11 +453,6 @@ def plotNodesAndObstaclesAndSave(nodePositions, fileName, obstacleRadii, obstacl
                 # add line to plot for part 4
                 plt.plot([nodePositions[0][i], nodePositions[0][j]],[nodePositions[1][i], nodePositions[1][j]], color = "blue", linewidth = "0.5")
     plt.scatter(nodePositions[0], nodePositions[1], marker = ">", color = "magenta")
-
-    ax = plt.gcf().gca()
-    for i in range(0, len(obstacleRadii)):
-        thisCircle = plt.Circle((obstaclePositions[i][0], obstaclePositions[i][1]), obstacleRadii[i], color = 'black')
-        ax.add_patch(thisCircle)
 
     plt.gcf().gca().set_aspect("equal")
     plt.savefig(fileName)
