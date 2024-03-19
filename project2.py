@@ -84,7 +84,7 @@ def main():
     allYCenters = []
     gammaX = np.linspace(0, 210, 700)
     gammaY = np.sin((gammaX / 210) * (2 * np.pi))
-    gammaY *= 50
+    gammaY *= 30
     gammaX += 40
     gammaY += 25
 
@@ -110,11 +110,11 @@ def main():
         if ((i + 1) % 100 == 0) or (i == 0):
             plt.clf()
             plt.plot(gammaX, gammaY, color = "red", label = "Gamma Agent")
-            plt.plot(allXCenters, allYCenters, color = "black", label = "Center of Mass")
+            plt.plot(allXCenters, allYCenters, color = "purple", label = "Center of Mass")
             plotNodes(nodePositions)
             plt.scatter(gammaX[i], gammaY[i], color = "green", zorder = 100, label = "Target")
             plt.legend(bbox_to_anchor = (1, -0.3), borderaxespad = 0)
-            plt.title("Case 3: Sin Wave")
+            plt.title("Case 2: Sin Wave")
             ax = plt.gcf().gca()
             for j in range(0, len(obstacleRadii)):
                 thisCircle = plt.Circle((obstacleCenters[j][0], obstacleCenters[j][1]), obstacleRadii[j], color = 'black')
@@ -540,7 +540,7 @@ def plotCenterOfMassAndTarget(targetX, targetY, nodePositions, filename, sim):
     y_vels = nodePositions[1, :, :]
     y_sums = np.sum(y_vels, axis = 0)
     y_sums = np.divide(y_sums, nodePositions.shape[1])
-    plt.plot(x_sums, y_sums, color = "black", label = "Center of Mass")
+    plt.plot(x_sums, y_sums, color = "purple", label = "Center of Mass")
     plt.plot(targetX, targetY, color = "red", label = "Gamma Agent")
     plt.legend(loc = "lower left")
     plt.title("Center of Mass vs. Gamma Agent - " + sim)
